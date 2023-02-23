@@ -3,18 +3,21 @@ import { Customer } from './models/customer';
 
 export const CUSTOMER_DATA: Customer[] = [
   {
+    key: 1,
     customerId: 1,
     custFirstName: 'Justin',
     custLastName: 'Tran',
     custCity: 'Ho Chi Minh City',
   },
   {
+    key: 2,
     customerId: 2,
     custFirstName: 'Justin',
     custLastName: 'Tran',
     custCity: 'Ho Chi Minh City',
   },
   {
+    key: 3,
     customerId: 3,
     custFirstName: 'Justin',
     custLastName: 'Tran',

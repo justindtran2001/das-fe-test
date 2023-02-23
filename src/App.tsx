@@ -1,9 +1,9 @@
-import DataTable, { DataTableColumn } from "./components/data-table"
-import "./App.css"
 import { useEffect, useState } from "react";
 import { CUSTOMER_DATA, ORDER_DATA } from "./data";
 import { Customer } from "./models/customer";
 import { Order } from "./models/order";
+import { Button, Space } from 'antd';
+import Table, { ColumnsType } from "antd/es/table";
 
 enum DATA_ENTITIES {
   CUSTOMER,
@@ -11,78 +11,79 @@ enum DATA_ENTITIES {
   EMPLOYEE
 }
 
-// const headersType = {
-//   CUSTOMER: [
-//     "Customer ID",
-//     "Customer First Name",
-//     "Customer Last Name",
-//     "Customer City"
-//   ],
-//   ORDER: [
-//     "Order Number",
-//     "Customer ID",
-//     "Employee ID",
-//   ]
-// }
-
-const tableColumns = [
+const columns: ColumnsType<Customer> = [
   {
-    label: "Customer ID",
-    field: "customerId"
+    title: 'Customer ID',
+    dataIndex: 'customerId',
+    key: 'customerId',
   },
   {
-    label: "Customer First name",
-    field: "custFirstName"
+    title: 'Customer First Name',
+    dataIndex: 'custFirstName',
+    key: 'custFirstName',
   },
   {
-    label: "Customer Last name",
-    field: "custLastName"
+    title: 'Customer Last Name',
+    dataIndex: 'custLastName',
+    key: 'custLastName',
   },
   {
-    label: "Customer City",
-    field: "custCity"
+    title: 'Customer City',
+    dataIndex: 'custCity',
+    key: 'custCity',
   },
-
+  {
+    title: 'Action',
+    key: 'action',
+    render: () => (
+      <Space size="middle">
+        <a>Edit</a>
+        <a>Delete</a>
+      </Space>
+    ),
+  },
 ];
 
 function App() {
   const [tableData, setTableData] = useState<Customer[] | Order[]>([]);
+  const [currentDataEntity, setCurrentDataEntity] = useState<DATA_ENTITIES>(DATA_ENTITIES.CUSTOMER);
 
   useEffect(() => {
     setTableData(ORDER_DATA);
   }, [])
 
-  const changeList = (targetData: DATA_ENTITIES) => {
-    if (targetData === DATA_ENTITIES.CUSTOMER)
+  useEffect(() => {
+    if (currentDataEntity === DATA_ENTITIES.CUSTOMER)
       setTableData(CUSTOMER_DATA);
-    else if (targetData === DATA_ENTITIES.ORDER)
+    else if (currentDataEntity === DATA_ENTITIES.ORDER)
       setTableData(ORDER_DATA);
+  }, [currentDataEntity])
+
+  const changeList = (targetData: DATA_ENTITIES) => {
+    setCurrentDataEntity(targetData);
   }
 
   return (
-    <div className="App">
-      <div style={{ display: "flex", padding: 50, gap: 50, alignItems: "start" }}>
-        <div className="sidebar">
-          <button
-            className="view-list-button"
-            id="view-customer-btn"
+    <div style={{ width: "100vw", height: "100vh" }}>
+      <div style={{ display: "flex", padding: 10, gap: 10 }}>
+        <div id="side-btns" style={{ display: "flex", flexDirection: "column", width: "20%", gap: 10 }}>
+          <Button
+            type={currentDataEntity === DATA_ENTITIES.CUSTOMER ? "primary" : "default"}
             onClick={() => changeList(DATA_ENTITIES.CUSTOMER)}>
             View Customers
-          </button>
-          <button
-            className="view-list-button"
-            id="view-orders-btn"
+          </Button>
+          <Button
+            type={currentDataEntity === DATA_ENTITIES.ORDER ? "primary" : "default"}
             onClick={() => changeList(DATA_ENTITIES.ORDER)}>
             View Orders
-          </button>
-          <button
-            className="view-list-button"
-            id="view-employees-btn"
+          </Button>
+          <Button
+            type={currentDataEntity === DATA_ENTITIES.EMPLOYEE ? "primary" : "default"}
             onClick={() => changeList(DATA_ENTITIES.EMPLOYEE)}>
             View Employees
-          </button>
+          </Button>
         </div>
-        <DataTable data={tableData} columns={tableColumns} />
+        <Table columns={columns} dataSource={tableData as Customer[]} />
       </div>
     </div>
   )
