@@ -1,5 +1,8 @@
 export type Order = {
-  orderNumber: number;
-  customerId: number;
-  employeeId: number;
+  key?: number, // for Ant Design table compatibility
+  orderNumber: number,
+  customerId: number,
+  orderDate: Date,
+  shipDate: Date,
+  employeeNumber: number,
 };

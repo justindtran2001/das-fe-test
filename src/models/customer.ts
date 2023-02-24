@@ -1,7 +1,11 @@
 export type Customer = {
-  key: number,
-  customerId: number;
-  custFirstName: string;
-  custLastName: string;
-  custCity: string;
+  key?: number, // for Ant Design table compatibility
+  customerId: number,
+  custFirstName: string,
+  custLastName: string,
+  custCity: string,
+  custState: string,
+  custZipcode: string,
+  custPhone: string,
+  custEmailAddress: string,
 };
