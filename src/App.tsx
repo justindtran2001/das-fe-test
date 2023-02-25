@@ -3,12 +3,6 @@ import CustomerTable from './components/customer-table';
 import EmployeeTable from './components/employee-table';
 import OrderTable from './components/order-table';
 
-enum DATA_ENTITIES {
-  CUSTOMER,
-  ORDER,
-  EMPLOYEE,
-}
-
 function App() {
   return (
     <div

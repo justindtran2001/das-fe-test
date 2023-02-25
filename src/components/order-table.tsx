@@ -1,12 +1,12 @@
 import {
-    Button,
-    DatePicker,
-    Form,
-    Input,
-    Modal,
-    Select,
-    Space,
-    Table
+  Button,
+  DatePicker,
+  Form,
+  Input,
+  Modal,
+  Select,
+  Space,
+  Table
 } from 'antd';
 import { ColumnProps } from 'antd/es/table';
 import dayjs from 'dayjs';
@@ -38,7 +38,7 @@ function OrderTable() {
       sorter: (a: Order, b: Order) => a.orderNumber - b.orderNumber,
     },
     {
-      title: 'Order ID',
+      title: 'Customer ID',
       dataIndex: 'customerId',
       key: 'customerId',
       sorter: (a: Order, b: Order) => a.customerId - b.customerId,
