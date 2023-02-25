@@ -21,7 +21,11 @@ import * as XLSX from 'xlsx';
 import customerClient from '../api/customerClient';
 import { Customer } from '../models/customer';
 
-function CustomerTable() {
+interface PropsType {
+  onDataChange: () => void;
+}
+
+function CustomerTable({ onDataChange }: PropsType) {
   const [searchValue, setSearchValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<Customer[]>([]);
@@ -135,6 +139,7 @@ function CustomerTable() {
       })
       .then((data) => {
         setIsLoading(false);
+        onDataChange();
 
         console.groupCollapsed('Customer Data');
         console.log(data);
@@ -337,7 +342,7 @@ function CustomerTable() {
           >
             <Button>
               <Space>
-                Select Columns
+                Select Columns to Export
                 <DownOutlined />
               </Space>
             </Button>
@@ -364,9 +369,9 @@ function CustomerTable() {
               ],
             }}
           >
-            <Button>
+            <Button type='primary'>
               <Space>
-                Export to
+                Export as
                 <DownOutlined />
               </Space>
             </Button>

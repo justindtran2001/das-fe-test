@@ -25,7 +25,11 @@ import employeeClient from '../api/employeeClient';
 import orderClient from '../api/orderClient';
 import { Order } from '../models/order';
 
-function OrderTable() {
+interface PropsType {
+  onDataChange: () => void;
+}
+
+function OrderTable({ onDataChange }: PropsType) {
   const [searchValue, setSearchValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<Order[]>([]);
@@ -123,6 +127,7 @@ function OrderTable() {
       })
       .then((data) => {
         setIsLoading(false);
+        onDataChange();
 
         console.groupCollapsed('Order Data');
         console.log(data);
@@ -254,7 +259,7 @@ function OrderTable() {
     setSearchValue('');
     reloadData();
   }
-  
+
   function exportToXlsx(): void {
     if (columnsChecklist.length <= 0) {
       alert('Please select at least one column to export');
@@ -347,7 +352,7 @@ function OrderTable() {
           >
             <Button>
               <Space>
-                Select Columns
+                Select Columns to Export
                 <DownOutlined />
               </Space>
             </Button>
@@ -374,9 +379,9 @@ function OrderTable() {
               ],
             }}
           >
-            <Button>
+            <Button type='primary'>
               <Space>
-                Export to
+                Export as
                 <DownOutlined />
               </Space>
             </Button>
