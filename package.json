@@ -10,10 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@types/jspdf": "^2.0.0",
     "antd": "^5.2.2",
     "dayjs": "^1.11.7",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.5.28",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@types/react": "^18.0.27",

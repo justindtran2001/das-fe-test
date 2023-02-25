@@ -1,6 +1,10 @@
+import { DownOutlined } from '@ant-design/icons';
 import {
   Button,
+  Card,
+  Checkbox,
   DatePicker,
+  Dropdown,
   Form,
   Input,
   InputNumber,
@@ -8,10 +12,14 @@ import {
   Space,
   Table
 } from 'antd';
+import { CheckboxValueType } from 'antd/es/checkbox/Group';
 import Search from 'antd/es/input/Search';
 import { ColumnProps } from 'antd/es/table';
 import dayjs from 'dayjs';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import { useEffect, useState } from 'react';
+import * as XLSX from 'xlsx';
 import employeeClient from '../api/employeeClient';
 import { Employee } from '../models/employee';
 
@@ -24,6 +32,32 @@ function EmployeeTable() {
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [formData] = Form.useForm();
   const [deleteEmpNumber, setDeleteEmpNumber] = useState<number | null>(null);
+  const [columnsChecklist, setColumnsChecklist] = useState<string[]>([
+    'employeeNumber',
+    'empFirstName',
+    'empLastName',
+    'empStreetAddress',
+    'empCity',
+    'empState',
+    'empZipcode',
+    'empPhoneNumber',
+    'position',
+    'hourlyRate',
+    'dateHired',
+  ]);
+  const columnCheckboxes: { label: string; value: string }[] = [
+    { label: 'Employee Number', value: 'employeeNumber' },
+    { label: 'Employee First Name', value: 'empFirstName' },
+    { label: 'Employee Last Name', value: 'empLastName' },
+    { label: 'Employee Street Address', value: 'empStreetAddress' },
+    { label: 'Employee City', value: 'empCity' },
+    { label: 'Employee State', value: 'empState' },
+    { label: 'Employee Zipcode', value: 'empZipcode' },
+    { label: 'Employee Phone', value: 'empPhoneNumber' },
+    { label: 'Position', value: 'position' },
+    { label: 'Hourly Rate', value: 'hourlyRate' },
+    { label: 'Date Hired', value: 'dateHired' },
+  ];
 
   const columns: ColumnProps<Employee>[] = [
     {
@@ -257,6 +291,55 @@ function EmployeeTable() {
     reloadData();
   }
 
+  function exportToXlsx(): void {
+    if (columnsChecklist.length <= 0) {
+      alert('Please select at least one column to export');
+      return;
+    }
+
+    let headers: string[] = [];
+    let rows: any[][] = [];
+
+    // @ts-ignore
+    headers = columnsChecklist.map(
+      (col) => columns.find((c) => c.key === col)?.title || ''
+    );
+    // @ts-ignore
+    rows = data.map((row) => columnsChecklist.map((col) => row[col]));
+
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+    XLSX.utils.book_append_sheet(wb, ws);
+    XLSX.writeFile(wb, 'employees.xlsx');
+  }
+
+  function exportToPdf() {
+    if (columnsChecklist.length <= 0) {
+      alert('Please select at least one column to export');
+      return;
+    }
+
+    const headers = columnsChecklist.map(
+      // @ts-ignore
+      (col) => columns.find((c) => c.key === col).title
+    );
+    const body = data.map((row) =>
+      // @ts-ignore
+      columnsChecklist.map((col) => row[col])
+    );
+    const doc = new jsPDF();
+    autoTable(doc, {
+      // @ts-ignore
+      head: [headers],
+      body: body,
+    });
+    doc.save('employees.pdf');
+  }
+
+  function handleColumnsChecklistChange(values: CheckboxValueType[]) {
+    setColumnsChecklist(values as string[]);
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -277,9 +360,64 @@ function EmployeeTable() {
             Reset
           </Button>
         </div>
-        <Button type='primary' onClick={() => handleCreateBtnClick()}>
-          Create new Employee
-        </Button>
+        <div style={{ display: 'flex', gap: 20 }}>
+          <Button type='primary' onClick={() => handleCreateBtnClick()}>
+            Create new employee
+          </Button>
+          <Dropdown
+            dropdownRender={() => (
+              <Card
+                bodyStyle={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                }}
+              >
+                <Checkbox.Group
+                  style={{ display: 'flex', flexDirection: 'column' }}
+                  value={columnsChecklist}
+                  onChange={handleColumnsChecklistChange}
+                  options={columnCheckboxes}
+                />
+              </Card>
+            )}
+          >
+            <Button>
+              <Space>
+                Select Columns
+                <DownOutlined />
+              </Space>
+            </Button>
+          </Dropdown>
+          <Dropdown
+            menu={{
+              onClick: ({ key }) => {
+                if (key === 'xlsx') {
+                  exportToXlsx();
+                }
+                if (key === 'pdf') {
+                  exportToPdf();
+                }
+              },
+              items: [
+                {
+                  label: 'XLSX',
+                  key: 'xlsx',
+                },
+                {
+                  label: 'PDF',
+                  key: 'pdf',
+                },
+              ],
+            }}
+          >
+            <Button>
+              <Space>
+                Export to
+                <DownOutlined />
+              </Space>
+            </Button>
+          </Dropdown>
+        </div>
       </div>
       <Table loading={isLoading} dataSource={data} columns={columns} />
       {/* CREATE/EDIT MODAL */}
