@@ -1,4 +1,5 @@
 import { Button, Form, Input, Modal, Space, Table } from 'antd';
+import Search from 'antd/es/input/Search';
 import { ColumnProps } from 'antd/es/table';
 import { useEffect, useState } from 'react';
 import customerClient from '../api/customerClient';
@@ -186,16 +187,48 @@ function CustomerTable() {
     });
   }
 
+  function executeSearch() {
+    if (searchValue === '' || searchValue === undefined) {
+      reloadData();
+      return;
+    }
+
+    setIsLoading(true);
+    setData(
+      data.filter((cust) => {
+        return Object.values(cust).some((value) =>
+          String(value).toLowerCase().includes(searchValue.toLowerCase())
+        );
+      })
+    );
+    setIsLoading(false);
+  }
+
+  function resetSearch() {
+    setSearchValue('');
+    reloadData();
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Input
-          name='search-bar'
-          style={{ width: '15em' }}
-          placeholder='search'
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-        />
+        <div
+          style={{
+            flexBasis: 'fit-content',
+          }}
+        >
+          <Search
+            style={{ width: '20em' }}
+            allowClear
+            enterButton
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            onSearch={() => executeSearch()}
+          />
+          <Button type='link' onClick={() => resetSearch()}>
+            Reset
+          </Button>
+        </div>
         <Button type='primary' onClick={() => handleCreateBtnClick()}>
           Create new customer
         </Button>
