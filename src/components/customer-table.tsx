@@ -21,11 +21,8 @@ import * as XLSX from 'xlsx';
 import customerClient from '../api/customerClient';
 import { Customer } from '../models/customer';
 
-interface PropsType {
-  onDataChange?: () => void;
-}
 
-function CustomerTable({ onDataChange }: PropsType) {
+function CustomerTable() {
   const [searchValue, setSearchValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<Customer[]>([]);
