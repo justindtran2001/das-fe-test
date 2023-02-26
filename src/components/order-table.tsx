@@ -25,11 +25,8 @@ import employeeClient from '../api/employeeClient';
 import orderClient from '../api/orderClient';
 import { Order } from '../models/order';
 
-interface PropsType {
-  onDataChange: () => void;
-}
 
-function OrderTable({ onDataChange }: PropsType) {
+function OrderTable() {
   const [searchValue, setSearchValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<Order[]>([]);
@@ -127,7 +124,6 @@ function OrderTable({ onDataChange }: PropsType) {
       })
       .then((data) => {
         setIsLoading(false);
-        onDataChange();
 
         console.groupCollapsed('Order Data');
         console.log(data);

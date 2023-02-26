@@ -1,18 +1,10 @@
 import { Card, Tabs } from 'antd';
-import { useState } from 'react';
 import BarChart from './components/bar-chart';
 import CustomerTable from './components/customer-table';
 import EmployeeTable from './components/employee-table';
 import OrderTable from './components/order-table';
 
 function App() {
-  const [newDataAlert, setNewDataAlert] = useState(false);
-
-  const handleDataChange = () => {
-    console.log('data changed');
-    setNewDataAlert(true);
-  };
-
   return (
     <div
       style={{
@@ -31,24 +23,22 @@ function App() {
             {
               key: '1',
               label: `Customer`,
-              children: <CustomerTable onDataChange={handleDataChange} />,
+              children: <CustomerTable />,
             },
             {
               key: '2',
               label: `Order`,
-              children: <OrderTable onDataChange={handleDataChange} />,
+              children: <OrderTable />,
             },
             {
               key: '3',
               label: `Employee`,
-              children: <EmployeeTable onDataChange={handleDataChange} />,
+              children: <EmployeeTable />,
             },
           ]}
         />
       </Card>
       <BarChart
-        newDataAlert={newDataAlert}
-        turnOffNewDataAlert={() => setNewDataAlert(false)}
       />
     </div>
   );

@@ -23,11 +23,7 @@ import * as XLSX from 'xlsx';
 import employeeClient from '../api/employeeClient';
 import { Employee } from '../models/employee';
 
-interface PropsType {
-  onDataChange: () => void;
-}
-
-function EmployeeTable({ onDataChange }: PropsType) {
+function EmployeeTable() {
   const [searchValue, setSearchValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<Employee[]>([]);
@@ -174,7 +170,6 @@ function EmployeeTable({ onDataChange }: PropsType) {
       })
       .then((data) => {
         setIsLoading(false);
-        onDataChange();
 
         console.groupCollapsed('Employee Data');
         console.log(data);

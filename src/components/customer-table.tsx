@@ -22,7 +22,7 @@ import customerClient from '../api/customerClient';
 import { Customer } from '../models/customer';
 
 interface PropsType {
-  onDataChange: () => void;
+  onDataChange?: () => void;
 }
 
 function CustomerTable({ onDataChange }: PropsType) {
@@ -139,8 +139,7 @@ function CustomerTable({ onDataChange }: PropsType) {
       })
       .then((data) => {
         setIsLoading(false);
-        onDataChange();
-
+        
         console.groupCollapsed('Customer Data');
         console.log(data);
         console.groupEnd();
